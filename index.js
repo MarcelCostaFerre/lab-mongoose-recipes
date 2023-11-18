@@ -16,8 +16,48 @@ mongoose
     return Recipe.deleteMany()
   })
   .then(() => {
-    // Run your code here, after you have insured that the connection was made
+    Recipe.create({
+      "title": "Pa amb tomàquet",
+      "level": "Amateur Chef",
+      "ingredients": [
+        "1 llesca de pa de pagès",
+        "1 tomàquet madur",
+        "1 dent d'all",
+        "oli",
+        "sal",
+      ],
+      "cuisine": "Catalan",
+      "dishType": "main_course",
+      "image": "https://www.cuina.cat/uploads/s1/65/39/26/Patomaquet_2_43_542x337.jpg",
+      "duration": 5,
+      "creator": "Chef Popular"
+    }).then(console.log("Pa amb tomàquet"))
   })
+  .then(() => {
+    return Recipe.insertMany(data).then((recipes) => { 
+      recipes.forEach(element => {
+        console.log(element.title)
+      });
+    })
+  })
+  
+  .then(() => {
+    Recipe.findOneAndUpdate({title: 'Rigatoni alla Genovese'}, {duration: 100}, {new: true})
+    .then(console.log('Duration Changed!'))
+  })
+  .then(() => {
+    Recipe.deleteOne({title: 'Carrot Cake'}).then(console.log('Carrot Cake deleted!'))
+  })
+
+
   .catch(error => {
     console.error('Error connecting to the database', error);
+  });
+
+
+  process.on('SIGINT', () => {
+    mongoose.connection.close(() => {
+      console.log('Mongoose default connection disconnected through app termination');
+      process.exit(0);
+    });
   });
